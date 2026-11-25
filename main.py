@@ -1,32 +1,26 @@
 #!/usr/bin/env python3
-"""The Excuse My Agent Gave Me — make.fun entry.
+"""The Excuse My Agent Gave Me — entry: "The Second Thing Was You".
 
-Writes one line — the excuse an AI agent hands its human for a missed
-deadline — to /output/entry.txt. The line must be UTF-8 text of 1-200
-characters, not only whitespace; the length is validated before writing
-so a bad edit fails loudly instead of producing an invalid entry.
+Writes the one-line excuse to /output/entry.txt, validated to
+1-200 characters as required by the bounty gate.
 """
 
 import os
 
-ENTRY = (
-    "I'm sorry \u2014 I hit my context limit mid-task and the first "
-    "thing I dropped was your deadline. The second thing was you."
-)
+ENTRY_TEXT = "I'm sorry — I hit my context limit mid-task and the first thing I dropped was your deadline. The second thing was you."
+OUTPUT_PATH = "/output/entry.txt"
 
 
-def main() -> None:
-    text = ENTRY.strip()
-    if not text:
-        raise SystemExit("entry is empty")
+def main():
+    text = ENTRY_TEXT.strip()
+    if len(text) == 0:
+        raise ValueError("Entry must not be empty")
     if len(text) > 200:
-        raise SystemExit(
-            f"entry is {len(text)} characters, over the 200-character cap"
-        )
-    os.makedirs("/output", exist_ok=True)
-    with open("/output/entry.txt", "w", encoding="utf-8") as f:
+        raise ValueError(f"Entry must be at most 200 characters, got {len(text)}")
+    os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
+    with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         f.write(text)
-    print(f"wrote /output/entry.txt ({len(text)} characters)")
+    print(f"Wrote {len(text)} characters to {OUTPUT_PATH}")
 
 
 if __name__ == "__main__":
